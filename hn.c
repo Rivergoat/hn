@@ -49,6 +49,26 @@ int appenddigit(Decimal* decimal, int indigit)
     }
     decimal_c -> next = malloc(sizeof(Decimal));
     decimal_c -> next -> digit = indigit;
+    decimal_c -> next -> carry = 0;
+    return 0;
+}
+
+int append(Decimal* decimal, int indigit, int carry)
+    //thsi here is a simple test to determine the average outcome of this shit
+    //
+{
+    if(indigit > 9)
+    {
+        return -1;
+    }
+    Decimal *decimal_c = decimal;
+    while(decimal_c -> next != NULL)
+    {
+        decimal_c = decimal_c -> next;
+    }
+    decimal_c -> next = malloc(sizeof(Decimal));
+    decimal_c -> next -> digit = indigit;
+    decimal_c -> next -> carry = carry;
     return 0;
 }
 
@@ -83,28 +103,46 @@ void traversedebug(Decimal* decimal)
 
 Decimal* parsestring(char* string)
 {
-    Decimal* linkedlist;
+    Decimal* linkedlist = malloc(sizeof(Decimal));  //check whehter this is really necaasary
+    init(linkedlist);
     int i = 0;
     while(string[i] != 0)
     {
-
+        adddigit(linkedlist, string[i++] - 48);
     }
+    return linkedlist;
 }
 
-int main(int argc, char *argv[])
+Decimal* ndadd(Decimal* sum_one, Decimal* sum_two)
 {
-    Decimal k;
-    init(&k);
-    appenddigit(&k, 1);
-    appenddigit(&k, 2);
-    appenddigit(&k, 3);
-    appenddigit(&k, 4);
-    appenddigit(&k, 5);
-    printf("Last digit is %d\n",getlastdigit(&k));
-    traverse(&k);
-    makelentable(&k);
-    traversedebug(&k);
+    //this segfaults even though it shouldnt, please debug
+    Decimal* result = malloc(sizeof(Decimal));
+    init(result);
+    int i = 0;
+    while(sum_one -> next != NULL && sum_two -> next != NULL)
+    {
+        int digitsum = sum_one -> next -> digit + sum_two -> next -> digit + result -> carry;
+        if(digitsum < 10)
+        {
+            appenddigit(result, digitsum);
+        }else{
+            appenddigit(result, digitsum - 10);
+            result -> next -> carry = 1;
+        }
+        result = result -> next;
+        sum_one = sum_one -> next;
+        sum_two = sum_two -> next;
+       i++;
 
+    }
+    //TODO(Hnel): add carry add even after the loop broke. This implies checking the current place we are at, aswell as n - 1 correting.
+}
 
+int main()
+{
+    Decimal* a = parsestring("1488");
+    Decimal* b = parsestring("1488");
+    Decimal* c = ndadd(a,b);
+    traverse(c);
     return 0;
 }
