@@ -115,7 +115,9 @@ Decimal* parsestring(char* string)
 
 Decimal* ndadd(Decimal* sum_one, Decimal* sum_two)
 {
-    //this segfaults even though it shouldnt, please debug
+    //Why the hell does this cause a segfault?
+    //Theoretically we checked whether the next element is NULL
+    //
     Decimal* result = malloc(sizeof(Decimal));
     init(result);
     int i = 0;
@@ -133,16 +135,39 @@ Decimal* ndadd(Decimal* sum_one, Decimal* sum_two)
         sum_one = sum_one -> next;
         sum_two = sum_two -> next;
        i++;
-
     }
     //TODO(Hnel): add carry add even after the loop broke. This implies checking the current place we are at, aswell as n - 1 correting.
+    return result;
+}
+
+void freell(Decimal* decimal)   //interesting behaviour. It appears memory is not instantly purged but rather freed as the name suggests
+{
+    while(decimal -> next != NULL)
+    {
+        Decimal* old = decimal;
+        decimal  = decimal -> next;
+        free(old);
+    }
+    free(decimal -> next);
 }
 
 int main()
 {
-    Decimal* a = parsestring("1488");
-    Decimal* b = parsestring("1488");
-    Decimal* c = ndadd(a,b);
-    traverse(c);
+//    Decimal* a = parsestring("1488");
+//    Decimal* b = parsestring("1488");
+//    traverse(a);
+//    Decimal* c = ndadd(a,b);
+//    traverse(c);
+    //Decimal* test = parsestring("2757");
+    Decimal* test = malloc(sizeof(Decimal));
+    appenddigit(test,2);
+    appenddigit(test,7);
+    appenddigit(test,5);
+    appenddigit(test,7);
+    adddigit(test,472);
+    adddigit(test,472);
+    adddigit(test,472);
+    adddigit(test,472);
+    traverse(test);
     return 0;
 }
