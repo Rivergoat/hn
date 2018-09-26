@@ -1,5 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
+#define bool int
+#define true 1
+#define false 0
 
 typedef struct decimal
 {
@@ -18,12 +21,14 @@ void init(Decimal* decimal)
 
 void traverse(Decimal* decimal)
 {
-    Decimal *decimal_c = decimal;
-    while(decimal_c -> next != NULL)
+    printf("[HEAD,");
+    while(decimal -> next != NULL)
     {
-        decimal_c = decimal_c -> next;
-        printf("%d\n",decimal_c -> digit);
+        decimal = decimal -> next;
+        printf("%d, ",decimal -> digit);
+        printf("SPONGE!\n");
     }
+    printf("TAIL]");
 }
 
 int getlastdigit(Decimal* decimal)
@@ -50,12 +55,11 @@ int appenddigit(Decimal* decimal, int indigit)
     decimal_c -> next = malloc(sizeof(Decimal));
     decimal_c -> next -> digit = indigit;
     decimal_c -> next -> carry = 0;
+    decimal_c -> next -> next = NULL;
     return 0;
 }
 
 int append(Decimal* decimal, int indigit, int carry)
-    //thsi here is a simple test to determine the average outcome of this shit
-    //
 {
     if(indigit > 9)
     {
@@ -105,41 +109,74 @@ Decimal* parsestring(char* string)
 {
     Decimal* linkedlist = malloc(sizeof(Decimal));  //check whehter this is really necaasary
     init(linkedlist);
+    printf("SPONGE!\n");
     int i = 0;
     while(string[i] != 0)
     {
         adddigit(linkedlist, string[i++] - 48);
     }
+    printf("SPONGE\n");
     return linkedlist;
 }
 
-Decimal* ndadd(Decimal* sum_one, Decimal* sum_two)
+void pparsestring(Decimal** decimal, char* string)
 {
-    //Why the hell does this cause a segfault?
-    //Theoretically we checked whether the next element is NULL
-    //
-    Decimal* result = malloc(sizeof(Decimal));
-    init(result);
+    init(*decimal);
+    printf("SPONGE!\n");
     int i = 0;
+    while(string[i] != 0)
+    {
+        adddigit(*(decimal), string[i++] - 48);
+    }
+    printf("SPONGE\n");
+}
+void gotoindex(Decimal** decimal)
+{
+    Decimal *decimal_c = *decimal;
+    while(decimal_c -> next != NULL)
+    {
+        decimal_c = decimal_c -> next;
+    }
+    *decimal = decimal_c;
+}
+
+Decimal* ndadd(Decimal* sum_one, Decimal* sum_two)  //TODO(Hnel): Add
+{
+    Decimal* result = malloc(sizeof(Decimal));
+    Decimal* result_c = result;
+    init(result);
+    int i = 0,r = 0;
     while(sum_one -> next != NULL && sum_two -> next != NULL)
     {
-        int digitsum = sum_one -> next -> digit + sum_two -> next -> digit + result -> carry;
+        int carry = 0;
+        if(result_c -> next != NULL)
+        {
+            carry = result_c -> next -> carry;
+        }
+        int digitsum = sum_one -> next -> digit + sum_two -> next -> digit + carry;
         if(digitsum < 10)
         {
             appenddigit(result, digitsum);
-        }else{
+        }
+        else
+        {
             appenddigit(result, digitsum - 10);
             result -> next -> carry = 1;
         }
+        //traverse(result_c);
         result = result -> next;
         sum_one = sum_one -> next;
         sum_two = sum_two -> next;
-       i++;
+        ++i;
+        if(sum_one -> next == NULL){r = 1;}
+        else if(sum_two -> next == NULL){r = 2;}
     }
-    //TODO(Hnel): add carry add even after the loop broke. This implies checking the current place we are at, aswell as n - 1 correting.
+    
+    traverse(result_c);
+    //TODO(Hnel): add carry add even after the loop broke. This implies checking the current place we are at, aswell as n - 1 correcting.
     return result;
 }
-
+void nl(){printf("\n");}
 void freell(Decimal* decimal)   //interesting behaviour. It appears memory is not instantly purged but rather freed as the name suggests
 {
     while(decimal -> next != NULL)
@@ -153,21 +190,25 @@ void freell(Decimal* decimal)   //interesting behaviour. It appears memory is no
 
 int main()
 {
-//    Decimal* a = parsestring("1488");
-//    Decimal* b = parsestring("1488");
-//    traverse(a);
-//    Decimal* c = ndadd(a,b);
-//    traverse(c);
-    //Decimal* test = parsestring("2757");
-    Decimal* test = malloc(sizeof(Decimal));
-    appenddigit(test,2);
-    appenddigit(test,7);
-    appenddigit(test,5);
-    appenddigit(test,7);
-    adddigit(test,472);
-    adddigit(test,472);
-    adddigit(test,472);
-    adddigit(test,472);
-    traverse(test);
-    return 0;
+    Decimal* decimal = malloc(sizeof(Decimal));
+    init(decimal);
+    decimal -> next = malloc(sizeof(Decimal));
+    decimal -> next -> digit = 1;
+    decimal -> next -> next = malloc(sizeof(Decimal));
+    decimal -> next -> next -> digit = 4;
+    decimal -> next -> next -> next  = malloc(sizeof(Decimal));
+    decimal -> next -> next -> next -> digit = 8;
+    decimal -> next -> next -> next -> next  = malloc(sizeof(Decimal));
+    decimal -> next -> next -> next -> next -> digit = 8;
+    decimal -> next -> next -> next -> next -> next = NULL;
+    adddigit(decimal, 9);
+    Decimal* b = parsestring("1235813");
+
+    traverse(b);
+    
+
+
+
+
+
 }
