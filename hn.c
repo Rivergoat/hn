@@ -26,7 +26,6 @@ void traverse(Decimal* decimal)
     {
         decimal = decimal -> next;
         printf("%d, ",decimal -> digit);
-        printf("SPONGE!\n");
     }
     printf("TAIL]");
 }
@@ -109,13 +108,11 @@ Decimal* parsestring(char* string)
 {
     Decimal* linkedlist = malloc(sizeof(Decimal));  //check whehter this is really necaasary
     init(linkedlist);
-    printf("SPONGE!\n");
     int i = 0;
     while(string[i] != 0)
     {
         adddigit(linkedlist, string[i++] - 48);
     }
-    printf("SPONGE\n");
     return linkedlist;
 }
 
@@ -154,10 +151,7 @@ Decimal* ndadd(Decimal* sum_one, Decimal* sum_two)  //TODO(Hnel): Add
             carry = result_c -> next -> carry;
         }
         int digitsum = sum_one -> next -> digit + sum_two -> next -> digit + carry;
-        if(digitsum < 10)
-        {
-            appenddigit(result, digitsum);
-        }
+        if(digitsum < 10) { appenddigit(result, digitsum); }
         else
         {
             appenddigit(result, digitsum - 10);
@@ -190,25 +184,6 @@ void freell(Decimal* decimal)   //interesting behaviour. It appears memory is no
 
 int main()
 {
-    Decimal* decimal = malloc(sizeof(Decimal));
-    init(decimal);
-    decimal -> next = malloc(sizeof(Decimal));
-    decimal -> next -> digit = 1;
-    decimal -> next -> next = malloc(sizeof(Decimal));
-    decimal -> next -> next -> digit = 4;
-    decimal -> next -> next -> next  = malloc(sizeof(Decimal));
-    decimal -> next -> next -> next -> digit = 8;
-    decimal -> next -> next -> next -> next  = malloc(sizeof(Decimal));
-    decimal -> next -> next -> next -> next -> digit = 8;
-    decimal -> next -> next -> next -> next -> next = NULL;
-    adddigit(decimal, 9);
     Decimal* b = parsestring("1235813");
-
     traverse(b);
-    
-
-
-
-
-
 }
