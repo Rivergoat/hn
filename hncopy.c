@@ -139,7 +139,6 @@ void gotoindex(Decimal** decimal)
 
 Decimal* ndadd(Decimal* sum_one, Decimal* sum_two)  //TODO(Hnel): Add
 {
-    //TODO(hnel): save the carry either in both linked lists or in a variable, when using a variable the value cannot be traced back
     Decimal* result = malloc(sizeof(Decimal));
     Decimal* result_c = result;
     init(result);
@@ -147,7 +146,7 @@ Decimal* ndadd(Decimal* sum_one, Decimal* sum_two)  //TODO(Hnel): Add
     while(sum_one -> next != NULL && sum_two -> next != NULL)
     {
         int carry = 0;
-        if(result_c -> next != NULL)    //TODO(hnel): find out what I thought when writing this. I can't see the purpose right now
+        if(result_c -> next != NULL)
         {
             carry = result_c -> next -> carry;
         }
@@ -159,29 +158,17 @@ Decimal* ndadd(Decimal* sum_one, Decimal* sum_two)  //TODO(Hnel): Add
             result -> next -> carry = 1;
         }
         //traverse(result_c);
-        result = result -> next; //FIXME(hnel): Is this needed? first heies it isn't 
+        result = result -> next;
         sum_one = sum_one -> next;
         sum_two = sum_two -> next;
+        ++i;
+        if(sum_one -> next == NULL){r = 1;}
+        else if(sum_two -> next == NULL){r = 2;}
     }
-    if(sum_one -> next != NULL)
-    {
-        while(sum_one -> next != NULL)  //this is not very beautiful, nor is it elegant but whatever
-        {
-            appenddigit(result, sum_one -> next -> digit + sum_one -> next -> carry);
-            sum_one = sum_one -> next;
-        }
-    }
-    else if(sum_two -> next == NULL)
-    {
-        while(sum_two -> next != NULL)  //this is not very beautiful, nor is it elegant but whatever
-        {
-            appenddigit(result, sum_two -> next -> digit + sum_two -> next -> carry);
-            sum_two = sum_two -> next;
-        }
-    }
+    
     traverse(result_c);
     //TODO(Hnel): add carry add even after the loop broke. This implies checking the current place we are at, aswell as n - 1 correcting.
-    return result_c;
+    return result;
 }
 void nl(){printf("\n");}
 void freell(Decimal* decimal)   //interesting behaviour. It appears memory is not instantly purged but rather freed as the name suggests
@@ -195,14 +182,8 @@ void freell(Decimal* decimal)   //interesting behaviour. It appears memory is no
     free(decimal -> next);
 }
 
-//TODO(hnel): remove trailng charahhpre
-//TODO(hnel): multiplication (multithreaded!)
-//T
 int main()
 {
-    Decimal* b = parsestring("002");
-    Decimal* a = parsestring("999");
-    Decimal* c = ndadd(a,b);
-    traverse(c);
+    Decimal* b = parsestring("1235813");
+    traverse(b);
 }
-//TODO(hnel): this shit doesn't work. carry goes lost? Numbers are not added correctly. This should be an easy fix
