@@ -1,5 +1,5 @@
-#HN: Huge Numbers and maybe a scripting language at some point
-##Did you ever dream of calculating with numbers so long you can't even imagine? Well now you can as long as you have enough RAM installed. Hugenumbers will work for you. The question is whether you would want to. Please read the description below
+# HN: Huge Numbers and maybe a scripting language at some point
+## Did you ever dream of calculating with numbers so long you can't even imagine? Well now you can as long as you have enough RAM installed. Hugenumbers will work for you. The question is whether you would want to. Please read the description below
 
 1. This is a simple project not dedicated to be efficient
 2. The numbers are stored in linked lists. Each element is a digit. This is not very efficient.
