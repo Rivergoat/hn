@@ -19,6 +19,7 @@ void init(Decimal* decimal)
     decimal -> place = 0;
 }
 
+
 void traverse(Decimal* decimal)
 {
     printf("[HEAD,");
@@ -58,7 +59,7 @@ int appenddigit(Decimal* decimal, int indigit)
     return 0;
 }
 
-int append(Decimal* decimal, int indigit, int carry)
+int append(Decimal* decimal, int indigit, int carry, int operator)
 {
     if(indigit > 9)
     {
@@ -104,6 +105,12 @@ void traversedebug(Decimal* decimal)
     }
 }
 
+Decimal* new_decimal()
+{
+    Decimal* decimal = malloc(sizeof(Decimal));
+    init(decimal);
+    return decimal;
+}
 Decimal* parsestring(char* string)
 {
     Decimal* linkedlist = malloc(sizeof(Decimal));  //check whehter this is really necaasary
@@ -137,52 +144,6 @@ void gotoindex(Decimal** decimal)
     *decimal = decimal_c;
 }
 
-Decimal* ndadd(Decimal* sum_one, Decimal* sum_two)  //TODO(Hnel): Add
-{
-    //TODO(hnel): save the carry either in both linked lists or in a variable, when using a variable the value cannot be traced back
-    Decimal* result = malloc(sizeof(Decimal));
-    Decimal* result_c = result;
-    init(result);
-    int i = 0,r = 0;
-    while(sum_one -> next != NULL && sum_two -> next != NULL)
-    {
-        int carry = 0;
-        if(result_c -> next != NULL)    //TODO(hnel): find out what I thought when writing this. I can't see the purpose right now
-        {
-            carry = result_c -> next -> carry;
-        }
-        int digitsum = sum_one -> next -> digit + sum_two -> next -> digit + carry;
-        if(digitsum < 10) { appenddigit(result, digitsum); }
-        else
-        {
-            appenddigit(result, digitsum - 10);
-            result -> next -> carry = 1;
-        }
-        //traverse(result_c);
-        result = result -> next; //FIXME(hnel): Is this needed? first heies it isn't 
-        sum_one = sum_one -> next;
-        sum_two = sum_two -> next;
-    }
-    if(sum_one -> next != NULL)
-    {
-        while(sum_one -> next != NULL)  //this is not very beautiful, nor is it elegant but whatever
-        {
-            appenddigit(result, sum_one -> next -> digit + sum_one -> next -> carry);
-            sum_one = sum_one -> next;
-        }
-    }
-    else if(sum_two -> next == NULL)
-    {
-        while(sum_two -> next != NULL)  //this is not very beautiful, nor is it elegant but whatever
-        {
-            appenddigit(result, sum_two -> next -> digit + sum_two -> next -> carry);
-            sum_two = sum_two -> next;
-        }
-    }
-    traverse(result_c);
-    //TODO(Hnel): add carry add even after the loop broke. This implies checking the current place we are at, aswell as n - 1 correcting.
-    return result_c;
-}
 void nl(){printf("\n");}
 void freell(Decimal* decimal)   //interesting behaviour. It appears memory is not instantly purged but rather freed as the name suggests
 {
@@ -202,7 +163,8 @@ int main()
 {
     Decimal* b = parsestring("002");
     Decimal* a = parsestring("999");
+
     Decimal* c = ndadd(a,b);
     traverse(c);
 }
-//TODO(hnel): this shit doesn't work. carry goes lost? Numbers are not added correctly. This should be an easy fix
+//TODO(hne this shit doesn't work. carry goes lost? Numbers are not added correctly. This should be an easy fix
