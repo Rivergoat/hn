@@ -1,0 +1,11 @@
+1. Add a container to have lots of linked list in one object maybe an array or a linked list
+
+2. Add a threaded multiplication
+
+3. Add substraction
+
+4. Now the real shit!
+4.1 Add support for operation chains
+4.2 Add support for scripting
+4.3 Make this an entire scripting language
+
