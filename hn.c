@@ -19,6 +19,12 @@ void init(Decimal* decimal)
     decimal -> place = 0;
 }
 
+Decimal* new_decimal()
+{
+    Decimal* decimal = malloc(sizeof(Decimal));
+    init(decimal);
+    return decimal;
+}
 
 void traverse(Decimal* decimal)
 {
@@ -105,12 +111,6 @@ void traversedebug(Decimal* decimal)
     }
 }
 
-Decimal* new_decimal()
-{
-    Decimal* decimal = malloc(sizeof(Decimal));
-    init(decimal);
-    return decimal;
-}
 Decimal* parsestring(char* string)
 {
     Decimal* linkedlist = malloc(sizeof(Decimal));  //check whehter this is really necaasary
@@ -156,9 +156,33 @@ void freell(Decimal* decimal)   //interesting behaviour. It appears memory is no
     free(decimal -> next);
 }
 
-//TODO(hnel): remove trailng charahhpre
+Decimal* ndadd(Decimal* sum_one, Decimal* sum_two)  //this is the nondestructive addition function
+{
+    int carry = 0, result_calc= 0;
+    Decimal* result = new_decimal();
+    while(sum_one -> next != NULL && sum_two -> next != NULL)
+    {
+        result = sum_one -> next -> digit + sum_two -> next -> digit + carry;
+        if(result_calc > 9)
+        {
+            result_calc -= 10;
+            carry = 1;
+        }
+        else{carry = 0}
+        appenddigit(result, result_calc)
+        //Now we need to move forward
+        sum_one = sum_one -> next;
+        sum_two = sum_two -> next;
+    }
+    if(sum_one -> next != NULL)
+    {
+        result_calc = sum_one -> next -> digit + carry;
+        if(result_calc > 9){result_calc -= 10, carry = 1}   //result_calc could be set to zero directly since no greater carry is possible
+    }
+}
+
 //TODO(hnel): multiplication (multithreaded!)
-//T
+
 int main()
 {
     Decimal* b = parsestring("002");
